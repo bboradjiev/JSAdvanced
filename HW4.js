@@ -12,4 +12,3 @@ const newNum = numbers
   .map((el) => el ** 2)
   .reduce((acc, cur) => acc + cur);
 
-console.log(newNum);
