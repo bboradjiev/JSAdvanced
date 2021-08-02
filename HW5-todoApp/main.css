@@ -1,0 +1,138 @@
+body{
+    background: #333;
+    padding-top: 3em;
+}
+header{
+    font-size: 2em;
+    color: #7fffd4;
+    text-align: center;
+}
+.todo-app{
+    width: 80%;
+    margin: 3em auto;
+    border: .3em solid #DDD;
+    background: #FFF;
+}
+
+.todo-add{
+    position: relative;
+    line-height: 4em;
+    vertical-align: middle;
+}
+.todo-add>input{
+    width: 98%;
+    height: 3em;
+    border: 1px solid #7fffd4;
+    outline: none;
+}
+.todo-add>input:focus{
+    border-width: 2px;
+}
+.todo-add>.todo-add-btn{
+    position: absolute;
+    top: 0; right: 0;
+    width: 4em;
+    height: 4em;
+    font-size: 1em;
+    background: #7fffd4;
+    border-radius: 100%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.todo-add>.todo-add-btn:focus, .todo-add>.todo-add-btn:hover{
+    box-shadow: 2px 2px 5px 4px #7FDDC4;
+}
+
+.todo-items{
+    margin-top: 1em;
+}
+.todo-items li{
+    width: 100%;
+    line-height: 3em;
+    padding-left: 1em;
+    box-sizing: border-box;
+    background: #666;
+    color: #DDD;
+}
+.todo-items li:nth-child(2n){
+    background: #777;
+}
+.todo-items li:hover{
+    font-weight: bold;
+    color: #FFF;
+    background: #888;
+    /* cursor: pointer; */
+}
+
+.action-icon{
+    float: right;
+    width: 2em;
+    height: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    color: #FF7E7E;
+    /* border:1px solid red; */
+}
+.action-icon:hover{
+    cursor: pointer;
+}
+
+
+/* stretch icon to containing div */
+.action-icon i{
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: .7;
+    /* border:3px solid green; */
+}
+.action-icon i::before{
+    vertical-align: middle;
+    line-height: 3em;
+    opacity: .7;
+}
+
+.action-icon:hover i::before{
+    opacity: 1;
+    font-weight: bold;
+}
+
+.todos-total{
+    line-height: 3em;
+}
+
+.completed{
+    text-decoration: line-through;
+}
+
+
+.todo{
+position: relative;
+}
+
+.complete-btn{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.update-btn{
+    position: absolute;
+    top: 0;
+    right: 42px;
+}
+
+.trash-btn{
+    position: absolute;
+    top: 0;
+    right: 84px;
+}
+
+button{
+    cursor: pointer;
+}
+
+.fas .far, .action-icon{
+    pointer-events: none;
+}

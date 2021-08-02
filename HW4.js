@@ -19,5 +19,4 @@ const newNum = numbers
   .filter((el) => el % 2 === 0)
   .map((el) => el ** 2)
   .reduce((acc, cur) => acc + cur);
-
 console.log(total);
