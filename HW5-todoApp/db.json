@@ -1,19 +1,9 @@
 {
-    "todos": [
-        {
-            "id":1,
-            "title": "do something",
-            "completed": false
-        },
-        {
-            "id":2,
-            "title": "do something",
-            "completed": false
-        },
-        {
-            "id":3,
-            "title": "do something",
-            "completed": false
-        }
-    ]
+  "todos": [
+    {
+      "title": "asd",
+      "completed": false,
+      "id": 3
+    }
+  ]
 }

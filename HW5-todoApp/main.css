@@ -68,7 +68,7 @@ header{
 .todo-items li:nth-child(2n){
     background: #777;
 }
-.todo-remove-btn,.editTodo{
+.todo-remove-btn,.editTodo, .todo-check-btn{
     float: right;
     width: 2em;
     height: 100%;
@@ -77,25 +77,25 @@ header{
     color: #FF7E7E;
     /* border:1px solid red; */
 }
-.todo-remove-btn:hover, .editTodo:hover{
+.todo-remove-btn:hover, .editTodo:hover, .todo-check-btn:hover{
     cursor: pointer;
 }
 
 /* stretch icon to containing div */
-.todo-remove-btn i, .editTodo i{
+.todo-remove-btn i, .editTodo i, .todo-check-btn i{
     display: block;
     width: 100%;
     height: 100%;
     opacity: .7;
     /* border:3px solid green; */
 }
-.todo-remove-btn i::before, .editTodo i::before{
+.todo-remove-btn i::before, .editTodo i::before, .todo-check-btn i::before{
     vertical-align: middle;
     line-height: 3em;
     opacity: .7;
 }
 
-.todo-remove-btn:hover i::before, .editTodo:hover i::before{
+.todo-remove-btn:hover i::before, .editTodo:hover i::before, .todo-check-btn:hover i::before{
     opacity: 1;
 }
 

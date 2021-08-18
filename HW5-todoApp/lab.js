@@ -5,19 +5,28 @@ const displayTodoItemsCount = function () {
   let count = todos.length || 0;
   nodes.totalItemsCount.innerHTML = count;
 };
-const renderTodos = function (todo) {
+const renderTodos = function (todos) {
   // clean current todos:
   nodes.todoListUL.innerHTML = "";
 
   // add todo item at the end
-  todo.forEach((todo) => {
+  todos.forEach((todo) => {
     nodes.todoListUL.innerHTML += `
 		<li data-id=${todo.id}>
 			<span class="todoID">${todo.id}.</span>
 			<span class="${todo.completed ? "completed" : ""}">${todo.title}</span>
 			<div class="todo-remove-btn"><i class="far fa-trash-alt"></i></div>
-		</li>
+      <div class="todo-check-btn"><i class="fas fa-check"></i></div>
+    </li>
 		`;
+    // attach click event on .todo-remove-btn ("optional chaining" operator is used to prevent errors on null)
+    document
+      .querySelector(".todo-remove-btn")
+      ?.addEventListener("click", removeTodo);
+
+    document
+      .querySelector(".todo-check-btn")
+      ?.addEventListener("click", completeTodo);
   });
 
   displayTodoItemsCount();
@@ -25,21 +34,27 @@ const renderTodos = function (todo) {
 const addTodo = function () {
   // get the input text:
   const todoText = nodes.addTodoInput.value;
-
-  // make the ID - this should be done by the server:
-  const id = todos.length ? todos[todos.length - 1].id + 1 : 1;
-
+  // new todo data to be sent to the server:
   const newTodo = {
-    id: id,
     title: todoText,
     completed: false,
   };
 
-  // add new todo object to the end of todos array:
-  todos = [...todos, newTodo];
-
-  // render todos:
-  renderTodos();
+  // change server state:
+  fetch(`${apiRoot}/todos`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newTodo),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // change local state:
+      todos = [...todos, data];
+      // update the view (UI)
+      renderTodos(todos);
+    });
 
   // clear input text
   nodes.addTodoInput.value = "";
@@ -48,29 +63,56 @@ const addTodo = function () {
   nodes.addTodoInput.focus();
 };
 const removeTodo = function (e) {
-  if (e.target.classList.contains("fa-trash-alt")) {
-    // get id of todo to be removed:
-    let todoID = Number(e.target.parentNode.parentNode.dataset.id);
-
-    // get the index of todo to be removed from todos array:
-    let idx = todos.findIndex((todo) => todo.id === todoID);
-
-    // remove from todos array the element with index idx:
-    idx >= 0 && todos.splice(idx, 1);
-
-    // render todos:
-    renderTodos();
-  }
+  // get id of todo to be removed:
+  const liNode = e.currentTarget.parentNode;
+  const todoID = +liNode.dataset.id;
+  // change server(db) state:
+  fetch(`${apiRoot}/todos/${todoID}`, { method: "DELETE" })
+    .then((response) => {
+      if (response.status === 200) {
+        // change local state:
+        let idx = todos.findIndex((todo) => todo.id === todoID);
+        idx >= 0 && todos.splice(idx, 1);
+        // update the view (UI)
+        renderTodos(todos);
+      }
+    })
+    .catch((err) => console.error(err));
+};
+const fetchTodos = function (apiRoot) {
+  fetch(`${apiRoot}/todos`)
+    .then((response) => response.json())
+    .then((data) => {
+      todos = data;
+      renderTodos(todos);
+    })
+    .catch((err) => console.error(err));
 };
 
-const getTodos = function () {
-  const apiUrl = "https://jsonplaceholder.typicode.com/todos";
-  const serverUrl = "http://localhost:3000/todos";
-  const todos = fetch(serverUrl)
-    .then((response) => response.json())
-    .then(renderTodos);
+const completeTodo = function (e) {
+  const liNode = e.currentTarget.parentNode;
+  const todoID = +liNode.dataset.id;
+  const todoText = nodes.addTodoInput.value;
 
-  return todos;
+  const toggledTodo = {
+    title: 'todoText',
+    completed: !todos[todoID].completed,
+  };
+
+  fetch(`${apiRoot}/todos/${todoID}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(toggledTodo),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // change local state:
+      todos = [...todos];
+      // update the view (UI)
+      renderTodos(todos);
+    });
 };
 
 // "cache" the DOM elements used in script:
@@ -81,17 +123,17 @@ const nodes = {
   totalItemsCount: document.querySelector(".todos-total>.output"),
 };
 
+let apiRoot = "http://localhost:3000";
 // create array of todo objects from string
-let todos = getTodos();
-console.log(todos);
+let todos = [];
+// console.log(todos);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // attach events
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-window.addEventListener("DOMContentLoaded", renderTodos);
+window.addEventListener("DOMContentLoaded", function () {
+  fetchTodos(apiRoot);
+});
 
 // add Todo Item (on button click):
 nodes.addTodoBtn.addEventListener("click", addTodo);
-
-// remove Todo Item:
-nodes.todoListUL.addEventListener("click", removeTodo);
